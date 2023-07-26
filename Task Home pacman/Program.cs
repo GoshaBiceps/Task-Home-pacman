@@ -10,44 +10,39 @@ namespace Task_Home_pacman
     {
         static void Main(string[] args)
         {
-            int collectBarry = 0;
-            bool startingGame = false;
-            char[,] map = ReadMap(out int playerPositionX, out int playerPositionY, out int allBarry, out char pacman, out char wall, out char barry);
+            int collectedBerries = 0;
+            bool doseBarryCollect = false;
+            char[,] map = ReadMap(out int playerPositionX, out int playerPositionY, out int allBerries, out char pacman, out char wall, out char berry);
 
             Console.CursorVisible = false;
 
             DrawMap(map);
 
-            while (startingGame == false)
+            while (doseBarryCollect == false)
             {
-                DrawPanel(collectBarry, allBarry);
+                DrawPanel(collectedBerries, allBerries);
 
                 Move(map, ref playerPositionX, ref playerPositionY, wall);
                 DrawPacman(playerPositionX, playerPositionY, pacman);
 
-                collectBarry = CollectBarry(map, collectBarry, allBarry, playerPositionX, playerPositionY, barry);
-                startingGame = isFinish(collectBarry, allBarry);
+                collectedBerries = CollectedBerries(map, collectedBerries, playerPositionX, playerPositionY, berry);
+                doseBarryCollect = collectedBerries == allBerries;
             }
 
             Console.ReadKey();
         }
 
-        static bool isFinish(int collectBarry, int allBarry)
-        {
-            return collectBarry == allBarry;
-        }
-
-        static int CollectBarry(char[,] map, int collectBerry, int allBerry, int playerPositionX, int playerPositionY, char berry)
+        static int CollectedBerries(char[,] map, int collectedBerries, int playerPositionX, int playerPositionY, char berry)
         {
             char symbol = ' ';
 
             if (map[playerPositionX, playerPositionY] == berry)
             {
-                collectBerry++;
+                collectedBerries++;
                 map[playerPositionX, playerPositionY] = symbol;
             }
 
-            return collectBerry;
+            return collectedBerries;
         }
 
         static void DrawPacman(int playerPositionX, int playerPositionY, char pacman)
@@ -71,7 +66,6 @@ namespace Task_Home_pacman
                     playerPositionY += directionY;
                 }
             }
-
         }
 
         static void GetDirection(ConsoleKeyInfo key, out int directionX, out int directionY)
@@ -96,16 +90,16 @@ namespace Task_Home_pacman
             }
         }
 
-        static char[,] ReadMap(out int playerPositionX, out int playerPositionY, out int allBarry, out char pacman, out char wall, out char barry)
+        static char[,] ReadMap(out int playerPositionX, out int playerPositionY, out int allBarries, out char pacman, out char wall, out char berry)
         {
             pacman = '@';
             wall = '#';
-            barry = '*';
+            berry = '*';
             char symbol = ' ';
 
             playerPositionX = 0;
             playerPositionY = 0;
-            allBarry = 0;
+            allBarries = 0;
 
             char[,] map =
               {
@@ -132,8 +126,8 @@ namespace Task_Home_pacman
                     }
                     else if (map[i, j] == symbol)
                     {
-                        map[i, j] = barry;
-                        allBarry++;
+                        map[i, j] = berry;
+                        allBarries++;
 
                     }
                 }
@@ -155,13 +149,13 @@ namespace Task_Home_pacman
             }
         }
 
-        static void DrawPanel(int collectBarry, int allBarry)
+        static void DrawPanel(int collectedBerries, int allBerryies)
         {
             int panelPositionX = 15;
             int panelPositionY = 0;
 
             Console.SetCursorPosition(panelPositionX, panelPositionY);
-            Console.WriteLine($"Собрано{collectBarry}/{allBarry}");
+            Console.WriteLine($"Собрано{collectedBerries}/{allBerryies}");
         }
     }
 }
